@@ -48,29 +48,29 @@ int isFull() {
 void push(int item) {
 	if (isFull()) {				// 스택이 포화 상태인 경우
 		SumOfStack += STACK_SIZE;
-		printf("top = %d", top);
+		
 		printf("  --- 스택 %d개", SumOfStack);
 		stack[++top] = item;
 		return;
 	}
-	else printf("top = %d", top); stack[++top] = item;	// top을 증가시킨 후 현재 top에 원소 삽입
+	else stack[++top] = item;	// top을 증가시킨 후 현재 top에 원소 삽입
 }
 
 // 스택의 top에서 원소를 삭제하는 연산
 int pop() {
 	if (isEmpty()) {	// 스택이 공백 상태인 경우
-		printf("top = %d", top);
+		
 		printf("\n\n Stack is Empty!!\n");
 
 		return 0;
 	}
 	else if (top%STACK_SIZE == 0 && SumOfStack>STACK_SIZE){	//스택사이즈는 최소 10이어야 한다.
 		SumOfStack -= STACK_SIZE;
-		printf("top = %d", top);
+		
 		printf("  --- 스택 %d개", SumOfStack);
 		return stack[top--];
 	}
-	else printf("top = %d", top); return stack[top--];	// 현재 top의 원소를 삭제한 후 top 감소
+	else return stack[top--];	// 현재 top의 원소를 삭제한 후 top 감소
 }
 
 // 스택의 원소를 출력하는 연산
@@ -80,29 +80,42 @@ void printStack() {
 	for (i = 0; i <= top; i++)
 		printf("%d ", stack[i]);
 	printf("] ");
+
+	printf("top = %d", top);
 }
 
 void main(void) {
 	int item;
+	int data;
+
 	printf("\n** 순차 스택 연산 **\n");
 
 	printf("\n--- 초기 스택 %d 개 ---\n", SumOfStack);
 	printStack();
 	for (int i = 0; i < 30; i++){
-		push(i + 1); printStack();
+		printf("\n\n 데이터를 입력하세요 (0 입력시 입력을 종료합니다): ");
+		scanf("%d", &data);
+		if (data == 0){
+			break;
+		}
+		push(data); printStack();
+		
 	}
 	printf("\n--- 총 스택 %d 개 ---\n", SumOfStack);
 
 	for (int i = 0; i < 31; i++){
+		
+		
 		printStack();	// 삭제
 		item = pop();
 
 		printf("\t pop  => %d", item);
-
+		if (top == -1){
+			break;
+		}
 
 	}
-
-
-	printf("\n--- 최종 스택 %d 개 ---\n", SumOfStack);
+	printStack();	// 삭제
+	printf("\n\n--- 최종 스택 %d 개 ---\n", SumOfStack);
 	getchar();
 }
