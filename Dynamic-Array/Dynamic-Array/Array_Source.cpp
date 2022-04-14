@@ -124,9 +124,9 @@ void main(void) {
 
 	for (int i = 0; i < 31; i++){
 		
-		
-		printStack();	// 삭제
-		item = pop();
+		item = pop();	// 삭제		
+		printStack();	
+
 
 		printf("\t pop  => %d", item);
 		if (top == -1){
@@ -134,7 +134,7 @@ void main(void) {
 		}
 
 	}
-	printStack();	// 삭제
+	
 	printf("\n\n--- 최종 스택 %d 개 ---\n\n", SumOfStack);
 
 	free(stack);
