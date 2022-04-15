@@ -112,9 +112,9 @@ void main(void) {
 	printf("\n--- 초기 스택 %d 개 ---\n", SumOfStack);
 	printStack();
 	for (int i = 0; i < 30; i++){
-		printf("\n\n 데이터를 입력하세요 (0 입력시 입력을 종료합니다): ");
+		printf("\n\n 데이터를 입력하세요 (00 입력시 입력을 종료합니다): ");
 		scanf("%d", &data);
-		if (data == 0){
+		if (data == 00){
 			break;
 		}
 		push(data); printStack();
