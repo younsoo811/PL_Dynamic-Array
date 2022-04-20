@@ -23,19 +23,28 @@ int isFull() {
 // 스택의 top에 원소를 삽입하는 연산
 void push(int item) {
 	if (isFull()) {				// 스택이 포화 상태인 경우
-		SumOfStack += STACK_SIZE;
+		SumOfStack += STACK_SIZE;	//현 스택을 스택 사이즈 만큼 증가
 
-		stack = (int*)malloc(SumOfStack * sizeof(int));		//malloc을 이용해 사이즈 20개로 늘림 (처음에 넣던 c의 10개 데이터가 0으로 초기화됨)
-		for (int i = 0; i < SumOfStack - STACK_SIZE; i++) stack[i] = stack_B[i];	//d에 백업했던 c의 값 불러오기
+		//malloc을 이용해 사이즈 20개로 늘림 (처음에 넣던 stack의 데이터가 0으로 초기화됨)
+		stack = (int*)malloc(SumOfStack * sizeof(int));		
+		for (int i = 0; i < SumOfStack - STACK_SIZE; i++) {
+			stack[i] = stack_B[i];	//stack_B에 백업했던 stack의 값 불러오기
+		}
 
-		printf("  !! 스택 10개 증가하였습니다 !!", SumOfStack);
-		stack[++top] = item;
+		//malloc을 이용해 (백업) 사이즈 20개로 늘림 (처음에 넣던 stack_B의 데이터가 0으로 초기화됨)
+		stack_B = (int*)malloc(SumOfStack * sizeof(int));	
+		for (int i = 0; i < SumOfStack - STACK_SIZE; i++) {
+			stack_B[i] = stack[i];	//stack값 다시 (백업)stack_B에 백업
+		}
 
+		printf("  !! 스택 %d개 증가하였습니다 !!", STACK_SIZE);
+		stack[++top] = item;	// top을 증가시킨 후 현재 top에 원소 삽입
+		stack_B[top] = stack[top];	//stack 배열 값 백업
 		return;
 	}
 	else {
-		stack[++top] = item;	// top을 증가시킨 후 현재 top에 원소 삽입
-		stack_B[top] = stack[top];	//stack 배열 값 백업
+		stack[++top] = item;
+		stack_B[top] = stack[top];
 	}
 }
 
@@ -48,14 +57,14 @@ int pop() {
 		return 0;
 	}
 	else if (top % STACK_SIZE == 0 && SumOfStack > STACK_SIZE){	//스택사이즈는 최소 10이어야 한다.
-		SumOfStack -= STACK_SIZE;
+		SumOfStack -= STACK_SIZE;	//현 스택을 스택 사이즈 만큼 감소
 
 		pop_B = stack[top--];	//pop값 백업
 
 		stack = (int*)malloc(SumOfStack * sizeof(int));		//malloc을 이용해 사이즈 20개로 늘림 (처음에 넣던 c의 10개 데이터가 0으로 초기화됨)
 		for (int i = 0; i < SumOfStack; i++) stack[i] = stack_B[i];	//d에 백업했던 c의 값 불러오기
 
-		printf("  !! 스택 10개 감소되었습니다 !!");
+		printf("  !! 스택 %d개 감소되었습니다 !!", STACK_SIZE);
 		return pop_B;
 	}
 	else {
@@ -85,17 +94,19 @@ void main(void) {
 
 	printf("\n--- 초기 스택 %d 개 ---\n", SumOfStack);
 	printStack();
+
+	//push
 	for (int i = 0; i < 30; i++){
-		printf("\n\n 데이터를 입력하세요 (00 입력시 입력을 종료합니다): ");
+		printf("\n\n push할 숫자를 입력하세요 (0 입력시 입력을 종료합니다): ");
 		scanf("%d", &data);
-		if (data == 00){
+		if (data == 0){
 			break;
 		}
 		push(data); printStack();
-
 	}
 	printf("\n--- push 이후 최종 스택 %d 개 ---\n", SumOfStack);
 
+	//pop
 	for (int i = 0; i < 31; i++){
 
 		printf("\n\n Pop 하시겠습니까? (Yes: 1, No: 0): ");
@@ -104,20 +115,23 @@ void main(void) {
 		if (data == 0){
 			break;
 		}
-		item = pop();	// 삭제		
-		printStack();
-
-
-		printf("\t pop  => %d", item);
-		if (top == -1){
-			break;
+		else if (data == 1){
+			item = pop();	// 삭제	
+			if (item == 0){	//top이 -1이면 for문 끝낸다
+				break;
+			}
+			
+			printStack();
+			printf("\t pop  => %d", item);
 		}
-
+		else{
+			printf("\n----다시 입력해주세요! (1 또는 0 만 입력)----");
+			i--;	//for문에서 i++ 한 값을 다시 이전으로 돌림
+		}
 	}
 
 	printf("\n\n--- 최종 스택 %d 개 ---\n\n", SumOfStack);
 
 	free(stack);
 	free(stack_B);
-	getchar();
 }
